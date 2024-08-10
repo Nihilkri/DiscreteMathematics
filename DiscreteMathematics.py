@@ -50,7 +50,18 @@ def fastExp(x: int, y: int, n: int) -> int:
   return p
 
 
-
+def crypt(k: int, N: int, m: int = 0, c: int = 0, dbug:bool = False) -> int:
+  """ Encrypts and decrypts a coded message """
+  #  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z 
+  # 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+  if(m == 0 and c == 0): return 0
+  if(m != 0):
+    x = (m + k) % N
+    if(dbug): print("Encrypted:", x)
+  if(c != 0):
+    x = (c - k) % N
+    if(dbug): print("Decrypted:", x)
+  
 
 
 
@@ -58,4 +69,5 @@ def fastExp(x: int, y: int, n: int) -> int:
 if __name__ == "__main__":
   #GCD(76, 26, dbug=True)
   #print(MultInvXModN(54,61, dbug=True))
-  print(fastExp(4, 14, 7))
+  #print(fastExp(4, 14, 7))
+  crypt(m=6, k=7, N=73, dbug=True)
