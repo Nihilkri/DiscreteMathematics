@@ -27,6 +27,7 @@ def GCD(x: int, y: int, ext: bool = False, dbug: bool = False) -> int:
 
 
 def MultInvXModN(x: int, n: int, dbug: bool = False) -> int:
+  """ The Multiplicative Inverse of X Mod N """
   g,s,t = GCD(x, n, ext=True, dbug=dbug)
   if(dbug): print(f"g,s,t = {g},{s},{t}")
   if(g != 1): 
@@ -34,9 +35,27 @@ def MultInvXModN(x: int, n: int, dbug: bool = False) -> int:
     return n
   if(dbug): print(f"The multiplicative inverse of {x} mod {n} is {s % n}.")
   return s % n
-    
+
+
+def fastExp(x: int, y: int, n: int) -> int:
+  """ Fast Integer Exponentiation for large numbers """
+  p = 1 # p holds the partial result.
+  s = x # s holds the current x**(2j).
+  r = y # r is used to compute the binary expansion of y.  
+  while(r > 0):
+    if(r % 2 == 1):
+      p = (p * s) % n
+    s = (s * s) % n
+    r //= 2
+  return p
+
+
+
+
+
+
 
 if __name__ == "__main__":
   #GCD(76, 26, dbug=True)
-  print(MultInvXModN(54,61, dbug=True))
-  
+  #print(MultInvXModN(54,61, dbug=True))
+  print(fastExp(4, 14, 7))
