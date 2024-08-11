@@ -1,4 +1,13 @@
+import math
 from random import randint as rnd
+
+def nPk(n:int, k:int) -> int:
+  return math.factorial(n) / math.factorial(n-k)
+
+
+def nCk(n:int, k:int) -> int:
+  return nPk(n, k) / math.factorial(k)
+
 
 def gcd(x:int, y:int, ext:bool = False, dbug:bool = False) -> int:
   """ Find the Greatest Common Divisor using Euclid's Algorithm. """
@@ -50,10 +59,33 @@ def fastExp(x:int, y:int, N:int) -> int:
   return p
 
 
+def code(s:str = None, m:int = None, dbug:bool = False):
+  """ Encodes a string into a numbers, or vice versa """
+  #  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  _
+  # 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 32
+  if(dbug): print(f'Encoding "{s}"')
+  if(s != None):
+    s = s.upper()
+    m, c = 0, 0
+    for v in s:
+      if(ord('A') <= ord(v) <= ord('Z')):
+        c = ord(v) - ord('A') + 1
+      elif(v == ' '):
+        c = 32
+      else:
+        c = 0
+      if(dbug): print(f"{v} : {c}")
+      m = m * 100 + c
+    if(dbug): print(f"m = {m}")
+    return m
+  if(m != None):
+    return str
+  return 0
+
+
+
 def crypt(k:int, N:int, m:int = None, c:int = None, dbug:bool = False) -> int:
   """ Encrypts and decrypts a coded message """
-  #  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z 
-  # 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
   if(m != None):
     x = (m + k) % N
     if(dbug): print("Encrypted:", x)
@@ -103,7 +135,35 @@ def rsa(m:int = None, c:int = None, N:int = None, p:int = None, q:int = None,
   if(dbug): print("Empty message, nothing to encrypt or decrypt.")
   return 0
 
+
+def codeMessage(txt:str, p:int, q:int, e:int, dbug:bool = False):
+  N,e,d = privateKey(p,q,e,dbug)
+  cm = ""
+  for s in txt:
+    m = code(s=s, dbug=dbug)
+    c = rsa(m=m, N=N, e=e, dbug=dbug)
+    cm += (" " if len(cm) > 0 else "") + ("0" if c < 10 else "") + str(c)
+  if(True): print("Coded message:", cm)
+  return cm
+ 
+def decodeMessage(cm:str, p:int, q:int, dbug:bool = False):
+  N,e,d = privateKey(p,q,None,dbug)
+  txt = ""
+  b = cm.split(" ")
+  for s in b:
+    m = code(s=s, dbug=dbug)
+    c = rsa(m=m, N=N, e=e, dbug=dbug)
+    cm += (" " if len(cm) > 0 else "") + ("0" if c < 10 else "") + str(c)
+  if(True): print("Coded message:", cm)
+  return cm
+ 
   
+def pa898():
+  for i in range(1,30):
+    print(2**i, 99*i)
+    if(2**i > 99*i):
+      return i
+  return 0
 
 
 if __name__ == "__main__":
@@ -114,5 +174,8 @@ if __name__ == "__main__":
   #privateKey(p=13, q=17, e=67, dbug=True)
   #c = rsa(m=1211, e=859, N=1829, d=79, dbug=True)
   #rsa(e=7, N=33, d=3, dbug=True)
-  rsa(c=8, p=13, q=7, e=59, d=11, dbug=True)
+  #rsa(c=8, p=13, q=7, e=59, d=11, dbug=True)
+  #print(pa898())
+  codeMessage("A cab", 3, 11, 3, True)
+
   
