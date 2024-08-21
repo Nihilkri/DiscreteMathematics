@@ -59,29 +59,40 @@ def fastExp(x:int, y:int, N:int) -> int:
   return p
 
 
-def code(s:str = None, m:int = None, dbug:bool = False):
-  """ Encodes a string into a numbers, or vice versa """
+def code(s:str = None, dbug:bool = False):
+  """ Encodes a letter into a number """
   #  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  _
   # 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 32
   if(dbug): print(f'Encoding "{s}"')
-  if(s != None):
-    s = s.upper()
-    m, c = 0, 0
-    for v in s:
-      if(ord('A') <= ord(v) <= ord('Z')):
-        c = ord(v) - ord('A') + 1
-      elif(v == ' '):
-        c = 32
-      else:
-        c = 0
-      if(dbug): print(f"{v} : {c}")
-      m = m * 100 + c
-    if(dbug): print(f"m = {m}")
-    return m
-  if(m != None):
-    return str
-  return 0
+  if(s == None): return 0
+  s = s.upper()
+  m, c = 0, 0
+  for v in s:
+    if(ord('A') <= ord(v) <= ord('Z')):
+      c = ord(v) - ord('A') + 1
+    elif(v == ' '):
+      c = 32
+    else:
+      c = 0
+    if(dbug): print(f"{v} : {c}")
+    m = m * 100 + c
+  if(dbug): print(f"m = {m}")
+  return m
 
+
+def decode(m:int = None, dbug:bool = False):
+  """ Encodes a number into a letter """
+  #  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  _
+  # 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 32
+  if(dbug): print(f'Decoding "{m}"')
+  if(m == None): return 0
+  if(0 < m <= 26):
+    s = chr(m - 1 + ord('A'))
+  elif(m == 32):
+    s = " "
+  else:
+    s = ""
+  return s
 
 
 def crypt(k:int, N:int, m:int = None, c:int = None, dbug:bool = False) -> int:
@@ -146,16 +157,17 @@ def codeMessage(txt:str, p:int, q:int, e:int, dbug:bool = False):
   if(True): print("Coded message:", cm)
   return cm
  
-def decodeMessage(cm:str, p:int, q:int, dbug:bool = False):
-  N,e,d = privateKey(p,q,None,dbug)
+def decodeMessage(cm:str, p:int, q:int, e:int, dbug:bool = False):
+  N,e,d = privateKey(p,q,e,dbug)
   txt = ""
   b = cm.split(" ")
-  for s in b:
-    m = code(s=s, dbug=dbug)
-    c = rsa(m=m, N=N, e=e, dbug=dbug)
-    cm += (" " if len(cm) > 0 else "") + ("0" if c < 10 else "") + str(c)
-  if(True): print("Coded message:", cm)
-  return cm
+  for v in b:
+    c = int(v)
+    m = rsa(c=c, N=N, d=d, dbug=dbug)
+    m = decode(m=m, dbug=dbug)
+    txt += m
+  if(True): print("Deoded message:", txt)
+  return txt
  
   
 def pa898():
@@ -171,11 +183,17 @@ if __name__ == "__main__":
   #print(MultInvXModN(54,61, dbug=True))
   #print(fastExp(4, 14, 7))
   #crypt(m=6, k=7, N=73, dbug=True)
-  #privateKey(p=13, q=17, e=67, dbug=True)
+  #privateKey(p=31, q=59, e=859, dbug=True)
   #c = rsa(m=1211, e=859, N=1829, d=79, dbug=True)
   #rsa(e=7, N=33, d=3, dbug=True)
   #rsa(c=8, p=13, q=7, e=59, d=11, dbug=True)
   #print(pa898())
-  codeMessage("A cab", 3, 11, 3, True)
 
-  
+
+  txt = "This is only a test"
+  #txt = "a cab"
+  p, q, e, dbug = 3, 11, 3, False
+  #cm = codeMessage(txt, p, q, e, dbug)
+  cm = "27 15 19 28 26 17 13 15 21 28 19 19 32 01 06 32 01 21 06 27 01 12 21 20 01 12 13"
+  txt2 = decodeMessage(cm, p, q, e, dbug)
+  print(txt2)
