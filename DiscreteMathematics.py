@@ -160,6 +160,8 @@ def codeMessage(txt:str, p:int, q:int, e:int, dbug:bool = False):
 def decodeMessage(cm:str, p:int, q:int, e:int, dbug:bool = False):
   N,e,d = privateKey(p,q,e,dbug)
   txt = ""
+  cm = cm.replace(',', ' ')
+  cm = cm.replace('  ', ' ')
   b = cm.split(" ")
   for v in b:
     c = int(v)
@@ -194,7 +196,7 @@ if __name__ == "__main__":
   #txt = "a cab"
   p, q, e, dbug = 3, 11, 3, False
   #privateKey(p, q, e, dbug)
-  cm = codeMessage(txt, p, q, e, dbug)
+  #cm = codeMessage(txt, p, q, e, dbug)
   #cm = "03 32 23 03 09 09 32 03 19 26 32 32 09 03 32 17 32 32 01 08 09 26 19"
   #cm = "27 15 19 28 26 17 13 15 21 28 19 19 32 01 06 32 01 21 06 27 01 12 21 20 01 12 13"
   #cm = "06 32 13 12 14 32 14 17 06 01 32 18 09 12 19 32 16 09 01 32 19 26 01 13 19 08 26"
@@ -203,5 +205,8 @@ if __name__ == "__main__":
   #cm = "19 3 5 31 32 8 9 13 13 3 3 5 13"
   #cm = "03 32 23 24 09 14 26 32 01 32 04 16 14 17 09 05 32 28 27 24 03 04 14 32 14 09 32 31 09 32 14 17 26 32 26 05 27 24 16 04 14 03 09 05"
   #cm = "06 32 13 12 14 32 14 17 06 01 32 18 09 12 19 32 16 09 01 32 19 26 01 13 19 08 26"
+  #cm = "10 32 14 9 9 32 24 1 5 32 1 32 4 16 14 17 9 5 32 28 27 24 3 4 14"
+  #cm = "4,16,14,17,9,5,32,3,28,32,28,9,32,18,21,5"
+  cm = "10 32 14 9 9 32 24 1 5 32 1 32 4 16 14 17 9 5 32 28 27 24 3 4 14"
   txt2 = decodeMessage(cm, p, q, e, dbug)
   print(txt2)
